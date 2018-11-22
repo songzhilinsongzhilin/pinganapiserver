@@ -2,6 +2,7 @@ package xhx.pinganapi.pinganapiserver.config;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -10,11 +11,22 @@ import xhx.pinganapi.pinganapiserver.utils.GetIpUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 @Component
 public class AuthInterceptor extends HandlerInterceptorAdapter {
+    @Value("${server.port}")
+    String port;
+
     @Autowired
     private WhiteListService whiteListService;
+
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String URl = request.getRequestURI();//"/error"
+        String path = request.getContextPath();//""
+        if(URl.equals("/error")){
+            response.sendRedirect(request.getContextPath()+"/static/pinganapi.htm");
+        }
         //获取加有@LoginRequire的方法，需要拦截
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         LoginRequire loginRequireAnnotation = handlerMethod.getMethodAnnotation(LoginRequire.class);
@@ -30,9 +42,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             }
             boolean flag = whiteListService.getIP(loginIp);
             if (flag == true) {
-                //重定向到错误页面
                 return true;
             }
+
         }
         return false;
     }

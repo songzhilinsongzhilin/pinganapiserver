@@ -37,7 +37,7 @@ public class CreateHttpClient {
         requestConfigBuilder.setConnectionRequestTimeout(30000);
         //连接建立后，request没有回应的timeout
         requestConfigBuilder.setSocketTimeout(30000);
-        requestConfigBuilder.setStaleConnectionCheckEnabled(true);//检验连接是否可用
+        requestConfigBuilder.setAuthenticationEnabled(true);//检验连接是否可用
         HttpClientBuilder clientBuilder = HttpClientBuilder.create();
         clientBuilder.setDefaultRequestConfig(requestConfigBuilder.build());
         clientBuilder.setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(30000).build()); //连接建立后，request没有回应的timeout

@@ -54,7 +54,7 @@ public class StandardInterface {
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/search/by_name?name=" + name + "&page=" + page + "&pageSize=" + pageSize;
+        String url = "http://192.168.11.231:8090/search/by_name?name=" + name + "&page=" + page + "&pageSize=" + pageSize;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         //关闭httpClient连接
@@ -81,7 +81,7 @@ http://192.168.11.90:8082/pinganStandardInterface/indexByIndexId?token=eyJhbGciO
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/index/" + indexId;
+        String url = "http://192.168.11.231:8090/index/" + indexId;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         String msg = "查询企业字典表";
@@ -106,7 +106,7 @@ http://192.168.11.90:8082/pinganStandardInterface/indexbyname?token=eyJhbGciOiJI
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/index/by_name?name=" + name;
+        String url = "http://192.168.11.231:8090/index/by_name?name=" + name;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         String msg = "查询企业字典表";
@@ -131,7 +131,7 @@ http://192.168.11.90:8082/pinganStandardInterface/moduleAndmoduleName?token=eyJh
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/module/" + indexId + "/reg_info";
+        String url = "http://192.168.11.231:8090/module/" + indexId + "/reg_info";
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         String msg = "查询注册信息表";
@@ -158,9 +158,9 @@ http://192.168.11.90:8082/pinganStandardInterface/modulepageAndmoduleName?token=
         }
         String url;
         if (page != null && pageSize != null) {
-            url = "http://123.59.198.71:8090/module_page/" + indexId + "/" + moduleName + "?page=" + page + "&pageSize=" + pageSize;
+            url = "http://192.168.11.231:8090/module_page/" + indexId + "/" + moduleName + "?page=" + page + "&pageSize=" + pageSize;
         } else {
-            url = "http://123.59.198.71:8090/module_page/" + indexId + "/" + moduleName;
+            url = "http://192.168.11.231:8090/module_page/" + indexId + "/" + moduleName;
         }
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
@@ -188,9 +188,9 @@ http://192.168.11.90:8082/pinganStandardInterface/modulepageAndmoduleName?token=
         }
         String url;
         if (page != null && pageSize != null) {
-            url = "http://123.59.198.71:8090/module_page_sort/" + indexId + "/" + moduleName + "?orderby=" + orderBy + "&sort=" + sort + "&page=" + page + "&pageSize=" + pageSize;
+            url = "http://192.168.11.231:8090/module_page_sort/" + indexId + "/" + moduleName + "?orderby=" + orderBy + "&sort=" + sort + "&page=" + page + "&pageSize=" + pageSize;
         } else {
-            url = "http://123.59.198.71:8090/module_page_sort/" + indexId + "/" + moduleName + "?orderby=" + orderBy + "&sort=" + sort;
+            url = "http://192.168.11.231:8090/module_page_sort/" + indexId + "/" + moduleName + "?orderby=" + orderBy + "&sort=" + sort;
         }
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
@@ -216,7 +216,7 @@ http://192.168.11.90:8082/pinganStandardInterface/modulepageAndmoduleName?token=
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/module_all/" + indexId + "/" + moduleName + "?orderby=" + orderBy + "&sort=" + sort;
+        String url = "http://192.168.11.231:8090/module_all/" + indexId + "/" + moduleName + "?orderby=" + orderBy + "&sort=" + sort;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         String msg = "查询" + moduleName + "表";
@@ -240,7 +240,7 @@ http://192.168.11.90:8082/pinganStandardInterface/modulepageAndmoduleName?token=
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/dic_List_Params/" + moduleName;
+        String url = "http://192.168.11.231:8090/dic_List_Params/" + moduleName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         String msg = "查询" + moduleName + "表";
@@ -263,7 +263,7 @@ http://192.168.11.90:8082/pinganStandardInterface/emPagemoduleorCountPattern?tok
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/em_pagemodule_or_count_pattern/" + moduleName;
+        String url = "http://192.168.11.231:8090/em_pagemodule_or_count_pattern/" + moduleName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         String msg = "查询" + moduleName + "表";
@@ -312,7 +312,7 @@ http://192.168.11.90:8082/pinganStandardInterface/emPagemoduleGroupbyPattern?tok
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/em_pagemodule_groupby_pattern/" + moduleName;
+        String url = "http://192.168.11.231:8090/em_pagemodule_groupby_pattern/" + moduleName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         String msg = "查询" + moduleName + "表";
@@ -382,7 +382,7 @@ http://192.168.11.90:8082/pinganStandardInterface/searchPersonbyname?token=eyJhb
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/searchPerson/by_name?name=" + name+"&page="+page+"&pageSize="+pageSize;
+        String url = "http://192.168.11.231:8090/searchPerson/by_name?name=" + name+"&page="+page+"&pageSize="+pageSize;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONArray jsonArray = JSONArray.parseArray(entityStr);
         String msg = "查询人员表";
@@ -435,7 +435,7 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
             page = 1;
             pageSize=10;
         }
-        String url = "http://123.59.198.71:8090/humanModuleAndId/"+moduleName+"?humanId=" + humanId+"&page="+page+"&pageSize="+pageSize;
+        String url = "http://192.168.11.231:8090/humanModuleAndId/"+moduleName+"?humanId=" + humanId+"&page="+page+"&pageSize="+pageSize;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONArray jsonArray = JSONArray.parseArray(entityStr);
         String msg = "查询人员表";
@@ -649,7 +649,7 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/dic_list/"+dicName;
+        String url = "http://192.168.11.231:8090/dic_list/"+dicName;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONArray jsonArray = JSONArray.parseArray(entityStr);
         String msg = "查询知识产权-专利表";
@@ -661,7 +661,7 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     //4.2.	根据模块名称自定义单条件查询/dic_list/{dicName}?{propName}={propValue}
     /*
     http://123.59.198.71:8090/dic_list/area?code=110000
-    http://192.168.11.90:8082/pinganStandardInterface/dicfirst?token=eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklwIjoiMTkyLjE2OC4xMS45MCIsImNvbXBhbnkiOiLmlrDljY7kv6EiLCJpZCI6MjAzNTU1MDQyNzAzNDgyODgsInVzZXJuYW1lIjoi5a6L5b-X5p6XIn0.ax1gljrm9kzK-g4G_79q_LcKouarBwbLSGk_pyy7LC8&dicName=area&propName=code&propValue=110000
+    http://192.168.11.90:8082/pinganStandardInterface/diclistdicName?token=eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklwIjoiMTkyLjE2OC4xMS45MCIsImNvbXBhbnkiOiLmlrDljY7kv6EiLCJpZCI6MjAzNTU1MDQyNzAzNDgyODgsInVzZXJuYW1lIjoi5a6L5b-X5p6XIn0.ax1gljrm9kzK-g4G_79q_LcKouarBwbLSGk_pyy7LC8&dicName=area&propName=code&propValue=110000
      */
     @LoginRequire
     @ResponseBody
@@ -695,7 +695,7 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/dic_first/"+dicName+"?code="+code;
+        String url = "http://192.168.11.231:8090/dic_first/"+dicName+"?code="+code;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         String msg = "查询知识产权-专利表";
@@ -705,9 +705,10 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
         return ResultUtil.success(jsonObject, msg);
     }
     //4.4.	字典表模糊查询/dic_List_like/{dicName}? prpMap={…}
-    /*查无数据
-    http://123.59.198.71:8090/dic_List_like/industry_indicator?prpMap={industry_name:’like农业like’,page:1,number:"20TO200",pageSize:10}
-     */
+    /*
+    http://192.168.11.231:8090/dic_List_like/industry_indicator?prpMap={page:1pageSize:10}
+    http://192.168.11.90:8082/pinganStandardInterface/dicListlike?token=eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklwIjoiMTkyLjE2OC4xMS45MCIsImNvbXBhbnkiOiLmlrDljY7kv6EiLCJpZCI6MjAzNTU1MDQyNzAzNDgyODgsInVzZXJuYW1lIjoi5a6L5b-X5p6XIn0.ax1gljrm9kzK-g4G_79q_LcKouarBwbLSGk_pyy7LC8&dicName=industry_indicator&prpMap={page:1,pageSize:10}
+    */
     @LoginRequire
     @ResponseBody
     @RequestMapping("/dicListlike")
@@ -717,7 +718,7 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/dic_List_like/" + dicName;
+        String url = "http://192.168.11.231:8090/dic_List_like/" + dicName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         String msg = "查询" + dicName + "表";
@@ -729,6 +730,8 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     //4.5.	行业精确搜索自定义查询/统计/dic_List_Statistics_Params/{dicName}? prpMap={…}
     /*查无数据
     http://123.59.198.71:8090/dic_List_Statistics_Params/sic?prpMap={code:'A',type:list}
+http://192.168.11.90:8082/pinganStandardInterface/dicListStatisticsParams?token=eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklwIjoiMTkyLjE2OC4xMS45MCIsImNvbXBhbnkiOiLmlrDljY7kv6EiLCJpZCI6MjAzNTU1MDQyNzAzNDgyODgsInVzZXJuYW1lIjoi5a6L5b-X5p6XIn0.ax1gljrm9kzK-g4G_79q_LcKouarBwbLSGk_pyy7LC8
+&dicName=sic&prpMap={page:1,pageSize:10}
      */
     @LoginRequire
     @ResponseBody
@@ -739,7 +742,7 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/dic_List_Statistics_Params/" + dicName;
+        String url = "http://192.168.11.231:8090/dic_List_Statistics_Params/" + dicName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         String msg = "查询" + dicName + "表";
@@ -751,6 +754,9 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     //5.1.	财务比率查询/cal_industry_indicator/{indexId}
     /*
     http://123.59.198.71:8090/cal_industry_indicator/132886
+    http://192.168.11.231:8090/cal_industry_indicator/132886
+    http://192.168.11.90:8082/pinganStandardInterface/calindustryindicator?token=eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklwIjoiMTkyLjE2OC4xMS45MCIsImNvbXBhbnkiOiLmlrDljY7kv6EiLCJpZCI6MjAzNTU1MDQyNzAzNDgyODgsInVzZXJuYW1lIjoi5a6L5b-X5p6XIn0.ax1gljrm9kzK-g4G_79q_LcKouarBwbLSGk_pyy7LC8
+&indexId=132886
      */
     @LoginRequire
     @ResponseBody
@@ -761,7 +767,7 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
         if (!result) {
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        String url = "http://123.59.198.71:8090/cal_industry_indicator/"+indexId;
+        String url = "http://192.168.11.231:8090/cal_industry_indicator/"+indexId;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
         JSONObject jsonObject = JSONObject.parseObject(entityStr);
         String msg = "查询财务比率表";
@@ -773,6 +779,7 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     //6.1.	进出口总额排名/indexId/{moduleName}?index_id={indexId}
     /*71无数据
     http://192.168.11.231:8090/indexId/import_export_product?index_id=132886
+http://192.168.11.90:8082/pinganStandardInterface/indexId?token=eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklwIjoiMTkyLjE2OC4xMS45MCIsImNvbXBhbnkiOiLmlrDljY7kv6EiLCJpZCI6MjAzNTU1MDQyNzAzNDgyODgsInVzZXJuYW1lIjoi5a6L5b-X5p6XIn0.ax1gljrm9kzK-g4G_79q_LcKouarBwbLSGk_pyy7LC8&moduleName=import_export_product&indexId=132886
      */
     @LoginRequire
     @ResponseBody
