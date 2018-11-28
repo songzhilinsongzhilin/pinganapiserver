@@ -545,72 +545,77 @@ public class PingAnApiController {
             //验证token是否正确
             Boolean result = userVisitApiService.verifytoken(token);
             //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
-            if(result) {
-                CloseableHttpClient httpClient = CreateHttpClient.getHttpClient();
-                //后期该uri调用可变参数的接口，利用name、regNo、socialCreditNo、taxNo中的一个或多个查询index_data中的数据
-                HttpPost httpPost = null;
-                List<BasicNameValuePair> params = new ArrayList<>();
-                if (name != null) {//123.59.198.71:8090  192.168.10.104
-                    httpPost = new HttpPost("http://192.168.10.104:8090/index/accurate_name");
-                    params.add(new BasicNameValuePair("name", name));
-                } else if (regNo != null) {
-                    httpPost = new HttpPost("http://192.168.10.104:8090/index/reg_no");
-                    params.add(new BasicNameValuePair("regNo", regNo));
-                } else if (socialCreditNo != null) {
-                    httpPost = new HttpPost("http://192.168.10.104:8090/index/social_credit_no");
-                    params.add(new BasicNameValuePair("socialCreditNo", socialCreditNo));
-                } else if (taxNo != null) {
-                    httpPost = new HttpPost("http://192.168.10.104:8090/index/tax_no");
-                    params.add(new BasicNameValuePair("taxNo", taxNo));
+            try {
+                if (result) {
+                    CloseableHttpClient httpClient = CreateHttpClient.getHttpClient();
+                    //后期该uri调用可变参数的接口，利用name、regNo、socialCreditNo、taxNo中的一个或多个查询index_data中的数据
+                    HttpPost httpPost = null;
+                    List<BasicNameValuePair> params = new ArrayList<>();
+                    if (name != null) {//123.59.198.71:8090  192.168.10.104
+                        httpPost = new HttpPost("http://192.168.10.104:8090/index/accurate_name");
+                        params.add(new BasicNameValuePair("name", name));
+                    } else if (regNo != null) {
+                        httpPost = new HttpPost("http://192.168.10.104:8090/index/reg_no");
+                        params.add(new BasicNameValuePair("regNo", regNo));
+                    } else if (socialCreditNo != null) {
+                        httpPost = new HttpPost("http://192.168.10.104:8090/index/social_credit_no");
+                        params.add(new BasicNameValuePair("socialCreditNo", socialCreditNo));
+                    } else if (taxNo != null) {
+                        httpPost = new HttpPost("http://192.168.10.104:8090/index/tax_no");
+                        params.add(new BasicNameValuePair("taxNo", taxNo));
+                    }
+                    UrlEncodedFormEntity entityParams = new UrlEncodedFormEntity(params, "utf-8");
+                    httpPost.setEntity(entityParams);
+                    String entityStr = null;
+                    //查询index_data
+                    HttpResponse httpResponse = null;
+                    try {
+                        httpResponse = httpClient.execute(httpPost);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    HttpEntity entity = httpResponse.getEntity();//取出返回结果
+                    StatusLine statusLine = httpResponse.getStatusLine();
+                    int statusCode = statusLine.getStatusCode();//执行结果状态
+                    if (statusCode != 200) {
+                        return ResultUtil.error(ResultEnum.NOT_FIND);
+                    }
+                    entityStr = EntityUtils.toString(entity, "utf-8");//将结果转换为字符串
+                    JSONObject jsonObject = JSONObject.parseObject(entityStr);
+                    Integer indexIdInt = (Integer) jsonObject.get("id");//取出indexid值
+                    Long indexId = indexIdInt.longValue();
+                    httpClient.close();
+                    if (indexId == null) {
+                        return ResultUtil.error(ResultEnum.NOT_FIND);
+                    }
+                    CloseableHttpClient httpClient1 = CreateHttpClient.getHttpClient();
+                    HttpPost httpPost1 = new HttpPost("http://192.168.10.104:8090/getModuleData/" + indexId);
+                    HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
+                    HttpEntity entity1 = httpResponse1.getEntity();//取出返回结果
+                    StatusLine statusLine1 = httpResponse1.getStatusLine();
+                    int statusCode1 = statusLine1.getStatusCode();//执行结果状态
+                    if (statusCode1 != 200) {
+                        return ResultUtil.error(ResultEnum.NOT_FIND);
+                    }
+                    String entityStr1 = EntityUtils.toString(entity1, "utf-8");//将结果转换为字符串
+                    JSONObject jsonObject1 = JSONObject.parseObject(entityStr1);
+                    httpClient1.close();
+                    if (jsonObject1 == null) {
+                        return ResultUtil.error(ResultEnum.NOT_FIND);
+                    }
+                    //返回结果前将数据库中的查询次数loginCount加1
+                    XhxUserVisitApi userVisitApi = userVisitApiService.selectLoginCount(token);
+                    userVisitApi.setLoginCount(userVisitApi.getLoginCount() + 1);
+                    userVisitApi.setUpdateTime(new Date());
+                    int i = userVisitApiService.updateLoginCount(userVisitApi);
+                    if (i < 1) {
+                        return ResultUtil.error(ResultEnum.NOT_FIND);
+                    }
+                    return ResultUtil.success(jsonObject1, "全量数据");
                 }
-                UrlEncodedFormEntity entityParams = new UrlEncodedFormEntity(params, "utf-8");
-                httpPost.setEntity(entityParams);
-                String entityStr = null;
-                //查询index_data
-                HttpResponse httpResponse = null;
-                try {
-                    httpResponse = httpClient.execute(httpPost);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                HttpEntity entity = httpResponse.getEntity();//取出返回结果
-                StatusLine statusLine = httpResponse.getStatusLine();
-                int statusCode = statusLine.getStatusCode();//执行结果状态
-                if (statusCode != 200) {
-                    return ResultUtil.error(ResultEnum.NOT_FIND);
-                }
-                entityStr = EntityUtils.toString(entity, "utf-8");//将结果转换为字符串
-                JSONObject jsonObject = JSONObject.parseObject(entityStr);
-                Integer indexIdInt = (Integer) jsonObject.get("id");//取出indexid值
-                Long indexId = indexIdInt.longValue();
-                httpClient.close();
-                if(indexId==null){
-                    return ResultUtil.error(ResultEnum.NOT_FIND);
-                }
-                CloseableHttpClient httpClient1 = CreateHttpClient.getHttpClient();
-                HttpPost httpPost1 = new HttpPost("http://192.168.10.104:8090/getModuleData/"+indexId);
-                HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
-                HttpEntity entity1 = httpResponse1.getEntity();//取出返回结果
-                StatusLine statusLine1 = httpResponse1.getStatusLine();
-                int statusCode1 = statusLine1.getStatusCode();//执行结果状态
-                if (statusCode1 != 200) {
-                    return ResultUtil.error(ResultEnum.NOT_FIND);
-                }
-                String entityStr1 = EntityUtils.toString(entity1, "utf-8");//将结果转换为字符串
-                JSONObject jsonObject1 = JSONObject.parseObject(entityStr1);
-                httpClient1.close();
-                if(jsonObject1==null){
-                    return ResultUtil.error(ResultEnum.NOT_FIND);
-                }
-                //返回结果前将数据库中的查询次数loginCount加1
-                XhxUserVisitApi userVisitApi = userVisitApiService.selectLoginCount(token);
-                userVisitApi.setLoginCount(userVisitApi.getLoginCount()+1);
-                userVisitApi.setUpdateTime(new Date());
-                int i = userVisitApiService.updateLoginCount(userVisitApi);
-                if(i<1){
-                    return ResultUtil.error(ResultEnum.NOT_FIND);
-                }
-                return ResultUtil.success(jsonObject1,"全量数据");
+            }catch (Exception e){
+                e.printStackTrace();
+                e.getMessage();
             }
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
@@ -625,6 +630,7 @@ public class PingAnApiController {
             //验证token是否正确
             Boolean result = userVisitApiService.verifytoken(token);
             //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+            try{
             if(result) {
                 CloseableHttpClient httpClient = CreateHttpClient.getHttpClient();
                 //后期该uri调用可变参数的接口，利用name、regNo、socialCreditNo、taxNo中的一个或多个查询index_data中的数据
@@ -691,6 +697,10 @@ public class PingAnApiController {
                 }
                 return ResultUtil.success(jsonObject1, "全量数据");
             }
+            }catch (Exception e){
+                e.printStackTrace();
+                e.getMessage();
+            }
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
 
@@ -703,25 +713,30 @@ public class PingAnApiController {
             return ResultUtil.error(ResultEnum.LACK_PARAMETER);
         }
         //验证token是否正确
+        long start2 = System.currentTimeMillis();
         Boolean result = userVisitApiService.verifytoken(token);
+        long time2 = System.currentTimeMillis()-start2;
+        System.out.println("用户身份认证耗时："+time2);
         //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
         Long indexId = null;
+
         if (result) {
+            long start = System.currentTimeMillis();
             CloseableHttpClient httpClient = CreateHttpClient.getHttpClient();
             //后期该uri调用可变参数的接口，利用name、regNo、socialCreditNo、taxNo中的一个或多个查询index_data中的数据
             HttpPost httpPost = null;
             List<BasicNameValuePair> params = new ArrayList<>();
             if (name != null) {//123.59.198.71:8090  192.168.10.104
-                httpPost = new HttpPost("http://192.168.10.104:8090/index/accurate_name");
+                httpPost = new HttpPost("http://192.168.11.90:8090/index/accurate_name");
                 params.add(new BasicNameValuePair("name", name));
             } else if (regNo != null) {
-                httpPost = new HttpPost("http://192.168.10.104:8090/index/reg_no");
+                httpPost = new HttpPost("http://192.168.11.90:8090/index/reg_no");
                 params.add(new BasicNameValuePair("regNo", regNo));
             } else if (socialCreditNo != null) {
-                httpPost = new HttpPost("http://192.168.10.104:8090/index/social_credit_no");
+                httpPost = new HttpPost("http://192.168.11.90:8090/index/social_credit_no");
                 params.add(new BasicNameValuePair("socialCreditNo", socialCreditNo));
             } else if (taxNo != null) {
-                httpPost = new HttpPost("http://192.168.10.104:8090/index/tax_no");
+                httpPost = new HttpPost("http://192.168.11.90:8090/index/tax_no");
                 params.add(new BasicNameValuePair("taxNo", taxNo));
             }
             UrlEncodedFormEntity entityParams = new UrlEncodedFormEntity(params, "utf-8");
@@ -745,12 +760,15 @@ public class PingAnApiController {
             Integer indexIdInt = (Integer) jsonObject.get("id");//取出indexid值
             indexId = indexIdInt.longValue();
             httpClient.close();
+            long time = System.currentTimeMillis()-start;
+            System.out.println("查询index_data表耗时："+time);
         }
         if(indexId==null){
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
+        long start = System.currentTimeMillis();
         CloseableHttpClient httpClientOther = CreateHttpClient.getHttpClient();
-        HttpPost httpPostOther = new HttpPost("http://192.168.10.104:8090/getPingAnData/"+indexId);
+        HttpPost httpPostOther = new HttpPost("http://192.168.11.90:8090/getPingAnData/"+indexId);//192.168.10.104
         CloseableHttpResponse response = httpClientOther.execute(httpPostOther);
         HttpEntity entity = response.getEntity();//取出返回结果
         StatusLine statusLine = response.getStatusLine();
@@ -761,16 +779,22 @@ public class PingAnApiController {
         }
         String resultStr = EntityUtils.toString(entity, "utf-8");//将结果转换为字符串
         JSONObject jsonObject = JSONObject.parseObject(resultStr);
+        JSONObject data = (JSONObject) jsonObject.get("data");
         httpClientOther.close();
+        long time = System.currentTimeMillis()-start;
+        System.out.println("查询其余表耗时："+time);
         //返回结果前将数据库中的查询次数loginCount加1
+        long start1 = System.currentTimeMillis();
         XhxUserVisitApi userVisitApi = userVisitApiService.selectLoginCount(token);
         userVisitApi.setLoginCount(userVisitApi.getLoginCount()+1);
         userVisitApi.setUpdateTime(new Date());
         int i = userVisitApiService.updateLoginCount(userVisitApi);
+        long time1 = System.currentTimeMillis()-start1;
+        System.out.println("记录查询次数耗时："+time1);
         if(i<1){
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
-        return ResultUtil.success(jsonObject);
+        return ResultUtil.success(data);
     }
 
 
