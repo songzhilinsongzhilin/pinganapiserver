@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="xhx.pinganapi.pinganapiserver.mapper.XhxUserVisitDetailMapper" >
+    <resultMap id="BaseResultMap" type="xhx.pinganapi.pinganapiserver.bean.XhxUserVisitDetail" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="loginIp" property="loginIp" jdbcType="VARCHAR" />
+        <result column="loginTime" property="loginTime" jdbcType="TIMESTAMP" />
+        <result column="paramName" property="paramName" jdbcType="VARCHAR" />
+        <result column="paramValue" property="paramValue" jdbcType="VARCHAR" />
+        <result column="resultStatus" property="resultStatus" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,loginIp,loginTime,paramName,paramValue,resultStatus
+    </sql>
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(*) from xhx_user_visit_detail
+        where loginIp=#{loginIp,jdbcType=VARCHAR}
+        <if test="startTime != null and startTime !='' ">
+        AND loginTime &gt;= #{startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="endTime != null and endTime !='' ">
+        AND loginTime &lt;= #{endTime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+    <insert id="insertVisit">
+        insert into xhx_user_visit_detail (loginIp,loginTime,paramName,paramValue,resultStatus)
+        values
+        (#{loginIp,jdbcType=VARCHAR}, #{loginTime,jdbcType=TIMESTAMP},#{paramName,jdbcType=VARCHAR},
+        #{paramValue,jdbcType=VARCHAR},#{resultStatus,jdbcType=INTEGER})
+    </insert>
+
+</mapper>
+

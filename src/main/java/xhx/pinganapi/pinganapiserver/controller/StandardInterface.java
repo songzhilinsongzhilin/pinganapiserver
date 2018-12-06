@@ -21,6 +21,7 @@ import xhx.pinganapi.pinganapiserver.utils.GetPathUtil;
 import xhx.pinganapi.pinganapiserver.utils.HttpClientUtil;
 import xhx.pinganapi.pinganapiserver.utils.ResultUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,11 +49,13 @@ public class StandardInterface {
     @LoginRequire
     @ResponseBody
     @RequestMapping("/searchbyname")
-    public Result searchbyname(String name, String token, int page, int pageSize) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result searchbyname(String name, String token, int page, int pageSize, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/search/by_name?name=" + name + "&page=" + page + "&pageSize=" + pageSize;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -75,11 +78,13 @@ http://192.168.11.90:8082/pinganStandardInterface/indexByIndexId?token=eyJhbGciO
     @LoginRequire
     @ResponseBody
     @RequestMapping("/indexByIndexId")
-    public Result indexByIndexId(Long indexId, String token) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result indexByIndexId(Long indexId, String token, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/index/" + indexId;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -100,11 +105,13 @@ http://192.168.11.90:8082/pinganStandardInterface/indexbyname?token=eyJhbGciOiJI
     @LoginRequire
     @ResponseBody
     @RequestMapping("/indexbyname")
-    public Result indexbyname(String name, String token) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result indexbyname(String name, String token, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/index/by_name?name=" + name;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -125,11 +132,13 @@ http://192.168.11.90:8082/pinganStandardInterface/moduleAndmoduleName?token=eyJh
     @LoginRequire
     @ResponseBody
     @RequestMapping("/moduleAndmoduleName")
-    public Result moduleAndmoduleName(Long indexId, String token) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result moduleAndmoduleName(Long indexId, String token, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/module/" + indexId + "/reg_info";
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -150,11 +159,13 @@ http://192.168.11.90:8082/pinganStandardInterface/modulepageAndmoduleName?token=
     @LoginRequire
     @ResponseBody
     @RequestMapping("/modulepageAndmoduleName")
-    public Result modulepageAndmoduleName(Long indexId, String token, String moduleName, Integer page, Integer pageSize) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result modulepageAndmoduleName(Long indexId, String token, String moduleName, Integer page, Integer pageSize, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url;
         if (page != null && pageSize != null) {
@@ -180,11 +191,13 @@ http://192.168.11.90:8082/pinganStandardInterface/modulepageAndmoduleName?token=
     @LoginRequire
     @ResponseBody
     @RequestMapping("/modulepagesortAndmoduleName")
-    public Result modulepagesortAndmoduleName(Long indexId, String token, String moduleName, String orderBy, String sort, Integer page, Integer pageSize) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result modulepagesortAndmoduleName(Long indexId, String token, String moduleName, String orderBy, String sort, Integer page, Integer pageSize, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url;
         if (page != null && pageSize != null) {
@@ -210,11 +223,13 @@ http://192.168.11.90:8082/pinganStandardInterface/modulepageAndmoduleName?token=
     @LoginRequire
     @ResponseBody
     @RequestMapping("/moduleallAndmoduleName")
-    public Result moduleallAndmoduleName(Long indexId, String token, String moduleName, String orderBy, String sort) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result moduleallAndmoduleName(Long indexId, String token, String moduleName, String orderBy, String sort, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/module_all/" + indexId + "/" + moduleName + "?orderby=" + orderBy + "&sort=" + sort;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -234,11 +249,13 @@ http://192.168.11.90:8082/pinganStandardInterface/modulepageAndmoduleName?token=
     @LoginRequire
     @ResponseBody
     @RequestMapping("/dicListParamsAndmoduleName")
-    public Result dicListParamsAndmoduleName(String token, String moduleName, String prpMap) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result dicListParamsAndmoduleName(String token, String moduleName, String prpMap, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/dic_List_Params/" + moduleName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
@@ -257,11 +274,13 @@ http://192.168.11.90:8082/pinganStandardInterface/emPagemoduleorCountPattern?tok
     @LoginRequire
     @ResponseBody
     @RequestMapping("/emPagemoduleorCountPattern")
-    public Result emPagemoduleorCountPattern(String token, String moduleName, String prpMap) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result emPagemoduleorCountPattern(String token, String moduleName, String prpMap, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/em_pagemodule_or_count_pattern/" + moduleName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
@@ -281,11 +300,13 @@ http://192.168.11.90:8082/pinganStandardInterface/emPagemoduleorCountPatternlist
     @LoginRequire
     @ResponseBody
     @RequestMapping("/emPagemoduleorCountPatternlist")
-    public Result emPagemoduleorCountPatternlist(String token, String moduleName, String prpMap) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result emPagemoduleorCountPatternlist(String token, String moduleName, String prpMap, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/em_pagemodule_or_count_pattern_list/" + moduleName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
@@ -306,11 +327,13 @@ http://192.168.11.90:8082/pinganStandardInterface/emPagemoduleGroupbyPattern?tok
     @LoginRequire
     @ResponseBody
     @RequestMapping("/emPagemoduleGroupbyPattern")
-    public Result emPagemoduleGroupbyPattern(String token, String moduleName, String prpMap) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result emPagemoduleGroupbyPattern(String token, String moduleName, String prpMap, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/em_pagemodule_groupby_pattern/" + moduleName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
@@ -330,11 +353,13 @@ http://192.168.11.90:8082/pinganStandardInterface/emPagemoduleGroupbyPattern?tok
     @LoginRequire
     @ResponseBody
     @RequestMapping("/emIndustryCompany")
-    public Result emIndustryCompany(String token, String moduleName, String prpMap) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result emIndustryCompany(String token, String moduleName, String prpMap, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/em_industry_company/" + moduleName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
@@ -353,11 +378,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModule?token=eyJhbGciOiJI
     @LoginRequire
     @ResponseBody
     @RequestMapping("/humanModule")
-    public Result humanModule(String token, String moduleName, String prpMap,int page,int pageSize) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result humanModule(String token, String moduleName, String prpMap,int page,int pageSize, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/humanModule/" + moduleName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap,page,pageSize);
@@ -376,11 +403,13 @@ http://192.168.11.90:8082/pinganStandardInterface/searchPersonbyname?token=eyJhb
     @LoginRequire
     @ResponseBody
     @RequestMapping("/searchPersonbyname")
-    public Result searchPersonbyname(String token, String name,int page,int pageSize) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result searchPersonbyname(String token, String name,int page,int pageSize, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/searchPerson/by_name?name=" + name+"&page="+page+"&pageSize="+pageSize;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -399,11 +428,13 @@ http://192.168.11.90:8082/pinganStandardInterface/searchPersonbyname?token=eyJhb
     @LoginRequire
     @ResponseBody
     @RequestMapping("/searchPersonById")
-    public Result searchPersonById(String token, String humanId) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result searchPersonById(String token, String humanId, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/searchPersonById/by_id?id=" + humanId;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -422,11 +453,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/humanModuleAndId")
-    public Result humanModuleAndId(String token,String moduleName, String humanId,Integer page,Integer pageSize) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result humanModuleAndId(String token,String moduleName, String humanId,Integer page,Integer pageSize, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         if(page!=null&&pageSize!=null){
             page = page;
@@ -452,11 +485,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/byhumanidexternalservice")
-    public Result byhumanidexternalservice(String token,String humanId) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result byhumanidexternalservice(String token,String humanId, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/by_humanid_external_service/"+humanId;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -475,11 +510,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/moduleProviderbyindexId")
-    public Result moduleProviderbyindexId(String token,String moduleName,int indexId) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result moduleProviderbyindexId(String token,String moduleName,int indexId, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/moduleProvider/by_indexId/"+moduleName+"?index_id="+indexId;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -498,11 +535,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/emmainindustryranking")
-    public Result emmainindustryranking(String token, String moduleName, String prpMap) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result emmainindustryranking(String token, String moduleName, String prpMap, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/em_main_industry_ranking/" + moduleName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
@@ -520,11 +559,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/industrycompanyranking")
-    public Result industrycompanyranking(String token, String moduleName, String prpMap) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result industrycompanyranking(String token, String moduleName, String prpMap, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/industry_company_ranking/" + moduleName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
@@ -544,11 +585,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping(value = "/emparamstatistic",method = RequestMethod.POST)
-    public Result emparamstatistic(String token, String moduleName, String prpMap) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result emparamstatistic(String token, String moduleName, String prpMap, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         JSONObject json = JSONObject.parseObject(prpMap);//{industrylist:"01,02,03,04,05"}
         String jsonValue = (String) json.get("industrylist");
@@ -574,11 +617,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/moduleName")
-    public Result moduleName(String token, String moduleName, String indexId)  {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result moduleName(String token, String moduleName, String indexId, HttpServletRequest request)  {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/moduleName/" + moduleName+"?index_id="+indexId;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -597,11 +642,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/byidrelationshipmap")
-    public Result byidrelationshipmap(String token, String indexId){
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result byidrelationshipmap(String token, String indexId, HttpServletRequest request){
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/by_id_relationship_map/"+indexId;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -620,11 +667,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/bypatentgroupbypattype")
-    public Result bypatentgroupbypattype(String token, int indexId) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result bypatentgroupbypattype(String token, int indexId, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/by_patent_groupby_pattype/"+indexId;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -643,11 +692,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/diclist")
-    public Result diclist(String token, String dicName) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result diclist(String token, String dicName, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/dic_list/"+dicName;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -666,11 +717,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/diclistdicName")
-    public Result diclistdicName(String token, String dicName,String propName,String propValue) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result diclistdicName(String token, String dicName,String propName,String propValue, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://123.59.198.71:8090/dic_list/"+dicName+"?"+propName+"="+propValue;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -689,11 +742,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/dicfirst")
-    public Result dicfirst(String token, String dicName,String code) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result dicfirst(String token, String dicName,String code, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/dic_first/"+dicName+"?code="+code;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -712,11 +767,13 @@ http://192.168.11.90:8082/pinganStandardInterface/humanModuleAndId?token=eyJhbGc
     @LoginRequire
     @ResponseBody
     @RequestMapping("/dicListlike")
-    public Result dicListlike(String token, String dicName, String prpMap) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result dicListlike(String token, String dicName, String prpMap, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/dic_List_like/" + dicName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
@@ -736,11 +793,13 @@ http://192.168.11.90:8082/pinganStandardInterface/dicListStatisticsParams?token=
     @LoginRequire
     @ResponseBody
     @RequestMapping("/dicListStatisticsParams")
-    public Result dicListStatisticsParams(String token, String dicName, String prpMap) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result dicListStatisticsParams(String token, String dicName, String prpMap, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/dic_List_Statistics_Params/" + dicName;
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
@@ -761,11 +820,13 @@ http://192.168.11.90:8082/pinganStandardInterface/dicListStatisticsParams?token=
     @LoginRequire
     @ResponseBody
     @RequestMapping("/calindustryindicator")
-    public Result calindustryindicator(String token, int indexId) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result calindustryindicator(String token, int indexId, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/cal_industry_indicator/"+indexId;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -784,11 +845,13 @@ http://192.168.11.90:8082/pinganStandardInterface/indexId?token=eyJhbGciOiJIUzI1
     @LoginRequire
     @ResponseBody
     @RequestMapping("/indexId")
-    public Result indexId(String token, String moduleName, int indexId) throws IOException {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result indexId(String token, String moduleName, int indexId, HttpServletRequest request) throws IOException {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://192.168.11.231:8090/indexId/" + moduleName+"?index_id="+indexId;
         String entityStr = HttpClientUtil.getResult(httpClient, url);
@@ -808,11 +871,13 @@ http://192.168.11.90:8082/pinganStandardInterface/indexId?token=eyJhbGciOiJIUzI1
     @LoginRequire
     @ResponseBody
     @RequestMapping("/selectrenkingsbycode")
-    public Result selectrenkingsbycode(String token,String prpMap) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return ResultUtil.error(ResultEnum.NOT_FIND);
+    public Result selectrenkingsbycode(String token,String prpMap, HttpServletRequest request) {
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
+        //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
         }
         String url = "http://123.59.198.71:8090/select_renkings_by_code";
         String entityStr = HttpClientUtil.getResultByParams(httpClient, url, prpMap);
@@ -823,46 +888,5 @@ http://192.168.11.90:8082/pinganStandardInterface/indexId?token=eyJhbGciOiJIUzI1
         }
         return ResultUtil.success(jsonObject, msg);
     }
-    //7.1.	PDF下载http://123.59.198.71:8083/index/{index_id}
-/*未查询
-http://192.168.11.231:8083/index/558
 
- */
-    @LoginRequire
-    @ResponseBody
-    @RequestMapping("/indexPDF")
-    public void indexPDF(String token, Long indexId,String localFileName) {
-        //验证token是否正确
-        Boolean result = userVisitApiService.verifytoken(token);
-        if (!result) {
-            return;
-        }
-        String url = "http://192.168.11.231:8083/index/" + indexId;
-        HttpClient client = new HttpClient();
-        GetMethod get = null;
-        FileOutputStream output = null;
-        try {
-            get = new GetMethod(url);
-            int i = client.executeMethod(get);
-            if (200 == i) {
-                File storeFile = new File(localFileName);
-                output = new FileOutputStream(storeFile);
-                output.write(get.getResponseBody());
-            } else {
-                System.out.println("DownLoad file occurs exception, the error code is :" + i);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (output != null) {
-                    output.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            get.releaseConnection();
-            client.getHttpConnectionManager().closeIdleConnections(0);
-        }
-    }
 }

@@ -13,4 +13,6 @@ public interface XhxUserVisitApiMapper {
     int updateLoginCount(XhxUserVisitApi userVisitApi);
 
     XhxUserVisitApi selectByTokenandloginIp(Map map);
+
+    XhxUserVisitApi selectByTokenAndPermission(Map map);
 }

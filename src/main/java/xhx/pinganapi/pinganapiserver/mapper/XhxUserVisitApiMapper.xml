@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="xhx.pinganapi.pinganapiserver.bean.XhxUserVisitApi" >
         <id column="id" property="id" jdbcType="BIGINT" />
         <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="uri" property="uri" jdbcType="VARCHAR" />
         <result column="company" property="company" jdbcType="VARCHAR" />
         <result column="token" property="token" jdbcType="VARCHAR" />
         <result column="loginCount" property="loginCount" jdbcType="INTEGER" />
@@ -13,7 +14,7 @@
         <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
     </resultMap>
     <sql id="Base_Column_List" >
-        id, username, company,token,loginCount, isEnable,loginIp,createTime, updateTime
+        id, username, company,token,loginCount, isEnable,loginIp,createTime, updateTime,uri
     </sql>
 
     <select id="selectByToken" resultType="xhx.pinganapi.pinganapiserver.bean.XhxUserVisitApi">
@@ -25,13 +26,17 @@
         select <include refid="Base_Column_List"/> from xhx_user_visit_api
         where loginIp=#{loginIp,jdbcType=VARCHAR} and token=#{token,jdbcType=VARCHAR}
     </select>
+    <select id="selectByTokenAndPermission" resultType="xhx.pinganapi.pinganapiserver.bean.XhxUserVisitApi">
+        select <include refid="Base_Column_List"/> from xhx_user_visit_api
+        where loginIp=#{loginIp,jdbcType=VARCHAR} and token=#{token,jdbcType=VARCHAR}
+    </select>
 
     <insert id="insertVisit">
-        insert into xhx_user_visit_api (id, username, company,token,loginCount, isEnable,loginIp,createTime, updateTime)
+        insert into xhx_user_visit_api (id, username, company,token,loginCount, isEnable,loginIp,createTime, updateTime,uri)
         values
         (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR},#{company,jdbcType=VARCHAR},#{token,jdbcType=VARCHAR},
          #{loginCount,jdbcType=INTEGER},#{isEnable,jdbcType=INTEGER}, #{loginIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-        #{updateTime,jdbcType=TIMESTAMP})
+        #{updateTime,jdbcType=TIMESTAMP},#{uri,jdbcType=VARCHAR})
     </insert>
 
     <update id="updateLoginCount" parameterType="xhx.pinganapi.pinganapiserver.bean.XhxUserVisitApi" >

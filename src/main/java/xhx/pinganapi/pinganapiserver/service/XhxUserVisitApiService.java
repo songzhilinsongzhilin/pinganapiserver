@@ -30,6 +30,19 @@ public class XhxUserVisitApiService {
         }
         return true;
     }
+    //验证用户以及用户权限
+    public Boolean verifytokenAndPermission(String token,HttpServletRequest request){
+        String requestURI = request.getRequestURI();
+        String loginIp = GetIpUtils.getIpAddress(request);
+        Map map = new HashMap();
+        map.put("loginIp",loginIp);
+        map.put("token",token);
+        XhxUserVisitApi userVisitApi = userVisitApiMapper.selectByTokenAndPermission(map);
+        if(userVisitApi!=null&&userVisitApi.getUri().contains(requestURI)){
+            return true;
+        }
+        return false;
+    }
     //根据ip验证用户
     public Boolean verifytokenByLoginIp(HttpServletRequest request,String token){
         String loginIp = GetIpUtils.getIpAddress(request);

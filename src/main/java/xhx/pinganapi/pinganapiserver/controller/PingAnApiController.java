@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import xhx.pinganapi.pinganapiserver.bean.Result;
 import xhx.pinganapi.pinganapiserver.bean.XhxUserVisitApi;
+import xhx.pinganapi.pinganapiserver.bean.XhxUserVisitDetail;
 import xhx.pinganapi.pinganapiserver.config.LoginRequire;
 import xhx.pinganapi.pinganapiserver.enums.ResultEnum;
+import xhx.pinganapi.pinganapiserver.service.UserVisitDetailService;
 import xhx.pinganapi.pinganapiserver.service.XhxUserVisitApiService;
 import xhx.pinganapi.pinganapiserver.thread.*;
 import xhx.pinganapi.pinganapiserver.utils.*;
@@ -48,7 +50,8 @@ public class PingAnApiController {
     XhxUserVisitApiService userVisitApiService;
     @Value("${token.key}")
     String tokenKey;
-
+    @Autowired
+    UserVisitDetailService userVisitDetailService;
     //接口掉方法，url？传入参数
     /*@LoginRequire
     @ResponseBody
@@ -508,7 +511,7 @@ public class PingAnApiController {
 */
     //添加用户访问的接口,根据用户的username、company、loginIp生成token
     //该接口需要username、company、loginIp参数
-    // http://123.59.198.72:8082/api/insertVisit?data={username:'沈岩',company:'新华信',loginIp:'192.168.11.133'}
+    // http://123.59.198.72:8082/api/insertVisit?data={username:'沈岩',company:'新华信',loginIp:'192.168.11.133',uri:'/api/selectpingan'}
     @LoginRequire
     @ResponseBody
     @RequestMapping("/insertVisit")
@@ -531,20 +534,24 @@ public class PingAnApiController {
         if (i<0){
             return ResultUtil.error(ResultEnum.ADD_ERROR);
         }
-        return ResultUtil.success();
+        return ResultUtil.success(ResultEnum.ADD_SUCCESS,"添加成功");
     }
 
         //根据用户的id查询全量数据,未过滤  http://192.168.11.90:8082/api/selectAllByIndexId?indexId=132886
         @LoginRequire
         @ResponseBody
         @RequestMapping(value = "/selectAllByAnyOne")
-        public Result selectAllByAnyOne(String regNo,String socialCreditNo,String taxNo,String name,String token) throws IOException {
+        public Result selectAllByAnyOne(String regNo,String socialCreditNo,String taxNo,String name,String token,HttpServletRequest request) throws IOException {
             if (token == null || (name == null && regNo == null && socialCreditNo == null && taxNo == null)) {//判断是否缺少参数
                 return ResultUtil.error(ResultEnum.LACK_PARAMETER);
             }
-            //验证token是否正确
-            Boolean result = userVisitApiService.verifytoken(token);
+            //验证token,ip,权限是否正确
+            Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+            //Boolean result = userVisitApiService.verifytoken(token);
             //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+            if(!result){
+                return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
+            }
             try {
                 if (result) {
                     CloseableHttpClient httpClient = CreateHttpClient.getHttpClient();
@@ -552,16 +559,16 @@ public class PingAnApiController {
                     HttpPost httpPost = null;
                     List<BasicNameValuePair> params = new ArrayList<>();
                     if (name != null) {//123.59.198.71:8090  192.168.10.104
-                        httpPost = new HttpPost("http://192.168.10.104:8090/index/accurate_name");
+                        httpPost = new HttpPost("http://192.168.10.111:8090/index/accurate_name");
                         params.add(new BasicNameValuePair("name", name));
                     } else if (regNo != null) {
-                        httpPost = new HttpPost("http://192.168.10.104:8090/index/reg_no");
+                        httpPost = new HttpPost("http://192.168.10.111:8090/index/reg_no");
                         params.add(new BasicNameValuePair("regNo", regNo));
                     } else if (socialCreditNo != null) {
-                        httpPost = new HttpPost("http://192.168.10.104:8090/index/social_credit_no");
+                        httpPost = new HttpPost("http://192.168.10.111:8090/index/social_credit_no");
                         params.add(new BasicNameValuePair("socialCreditNo", socialCreditNo));
                     } else if (taxNo != null) {
-                        httpPost = new HttpPost("http://192.168.10.104:8090/index/tax_no");
+                        httpPost = new HttpPost("http://192.168.10.111:8090/index/tax_no");
                         params.add(new BasicNameValuePair("taxNo", taxNo));
                     }
                     UrlEncodedFormEntity entityParams = new UrlEncodedFormEntity(params, "utf-8");
@@ -589,7 +596,7 @@ public class PingAnApiController {
                         return ResultUtil.error(ResultEnum.NOT_FIND);
                     }
                     CloseableHttpClient httpClient1 = CreateHttpClient.getHttpClient();
-                    HttpPost httpPost1 = new HttpPost("http://192.168.10.104:8090/getModuleData/" + indexId);
+                    HttpPost httpPost1 = new HttpPost("http://192.168.10.111:8090/getModuleData/" + indexId);
                     HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
                     HttpEntity entity1 = httpResponse1.getEntity();//取出返回结果
                     StatusLine statusLine1 = httpResponse1.getStatusLine();
@@ -623,30 +630,34 @@ public class PingAnApiController {
         @LoginRequire
         @ResponseBody
         @RequestMapping(value = "/selectAllByAnyOneTuoMin")
-        public Result selectAllByAnyOneTuoMin(String regNo,String socialCreditNo,String taxNo,String name,String token) throws IOException {
+        public Result selectAllByAnyOneTuoMin(String regNo,String socialCreditNo,String taxNo,String name,String token,HttpServletRequest request) throws IOException {
             if (token == null || (name == null && regNo == null && socialCreditNo == null && taxNo == null)) {//判断是否缺少参数
                 return ResultUtil.error(ResultEnum.LACK_PARAMETER);
             }
-            //验证token是否正确
-            Boolean result = userVisitApiService.verifytoken(token);
+            //验证token,ip,权限是否正确
+            Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+            //Boolean result = userVisitApiService.verifytoken(token);
             //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+            if(!result){
+                return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
+            }
             try{
             if(result) {
                 CloseableHttpClient httpClient = CreateHttpClient.getHttpClient();
                 //后期该uri调用可变参数的接口，利用name、regNo、socialCreditNo、taxNo中的一个或多个查询index_data中的数据
                 HttpPost httpPost = null;
                 List<BasicNameValuePair> params = new ArrayList<>();
-                if (name != null) {//123.59.198.71:8090  192.168.10.104
-                    httpPost = new HttpPost("http://192.168.10.104:8090/index/accurate_name");
+                if (name != null) {//123.59.198.71:8090  192.168.10.111
+                    httpPost = new HttpPost("http://192.168.10.111:8090/index/accurate_name");
                     params.add(new BasicNameValuePair("name", name));
                 } else if (regNo != null) {
-                    httpPost = new HttpPost("http://192.168.10.104:8090/index/reg_no");
+                    httpPost = new HttpPost("http://192.168.10.111:8090/index/reg_no");
                     params.add(new BasicNameValuePair("regNo", regNo));
                 } else if (socialCreditNo != null) {
-                    httpPost = new HttpPost("http://192.168.10.104:8090/index/social_credit_no");
+                    httpPost = new HttpPost("http://192.168.10.111:8090/index/social_credit_no");
                     params.add(new BasicNameValuePair("socialCreditNo", socialCreditNo));
                 } else if (taxNo != null) {
-                    httpPost = new HttpPost("http://192.168.10.104:8090/index/tax_no");
+                    httpPost = new HttpPost("http://192.168.10.111:8090/index/tax_no");
                     params.add(new BasicNameValuePair("taxNo", taxNo));
                 }
                 UrlEncodedFormEntity entityParams = new UrlEncodedFormEntity(params, "utf-8");
@@ -674,7 +685,7 @@ public class PingAnApiController {
                     return ResultUtil.error(ResultEnum.NOT_FIND);
                 }
                 CloseableHttpClient httpClient1 = CreateHttpClient.getHttpClient();
-                HttpPost httpPost1 = new HttpPost("http://192.168.10.104:8090/getModuleDataTuoMin/" + indexId);
+                HttpPost httpPost1 = new HttpPost("http://192.168.10.111:8090/getModuleDataTuoMin/" + indexId);
                 HttpResponse httpResponse1 = httpClient1.execute(httpPost1);
                 HttpEntity entity1 = httpResponse1.getEntity();//取出返回结果
                 StatusLine statusLine1 = httpResponse1.getStatusLine();
@@ -712,31 +723,42 @@ public class PingAnApiController {
         if (token == null || (name == null && regNo == null && socialCreditNo == null && taxNo == null)) {//判断是否缺少参数
             return ResultUtil.error(ResultEnum.LACK_PARAMETER);
         }
-        //验证token是否正确
-        long start2 = System.currentTimeMillis();
-        Boolean result = userVisitApiService.verifytoken(token);
-        long time2 = System.currentTimeMillis()-start2;
-        System.out.println("用户身份认证耗时："+time2);
+        //验证token,ip,权限是否正确
+        Boolean result = userVisitApiService.verifytokenAndPermission(token, request);
+        //Boolean result = userVisitApiService.verifytoken(token);
         //Boolean result = userVisitApiService.verifytokenByLoginIp(request,token);
+        if(!result){
+            return ResultUtil.error(ResultEnum.CHECKFAILPERMISSION);
+        }
+        XhxUserVisitDetail userVisitDetail=new XhxUserVisitDetail();
+        userVisitDetail.setLoginTime(new Date());
+        userVisitDetail.setLoginIp(GetIpUtils.getIpAddress(request));
         Long indexId = null;
-
         if (result) {
             long start = System.currentTimeMillis();
             CloseableHttpClient httpClient = CreateHttpClient.getHttpClient();
             //后期该uri调用可变参数的接口，利用name、regNo、socialCreditNo、taxNo中的一个或多个查询index_data中的数据
             HttpPost httpPost = null;
             List<BasicNameValuePair> params = new ArrayList<>();
-            if (name != null) {//123.59.198.71:8090  192.168.10.104
-                httpPost = new HttpPost("http://192.168.11.90:8090/index/accurate_name");
+            if (name != null) {//123.59.198.88:8090  192.168.10.111
+                userVisitDetail.setParamName("name");
+                userVisitDetail.setParamValue(name);
+                httpPost = new HttpPost("http://123.59.198.88:8090/index/accurate_name");
                 params.add(new BasicNameValuePair("name", name));
             } else if (regNo != null) {
-                httpPost = new HttpPost("http://192.168.11.90:8090/index/reg_no");
+                userVisitDetail.setParamName("regNo");
+                userVisitDetail.setParamValue(regNo);
+                httpPost = new HttpPost("http://123.59.198.88:8090/index/reg_no");
                 params.add(new BasicNameValuePair("regNo", regNo));
             } else if (socialCreditNo != null) {
-                httpPost = new HttpPost("http://192.168.11.90:8090/index/social_credit_no");
+                userVisitDetail.setParamName("socialCreditNo");
+                userVisitDetail.setParamValue(socialCreditNo);
+                httpPost = new HttpPost("http://123.59.198.88:8090/index/social_credit_no");
                 params.add(new BasicNameValuePair("socialCreditNo", socialCreditNo));
             } else if (taxNo != null) {
-                httpPost = new HttpPost("http://192.168.11.90:8090/index/tax_no");
+                userVisitDetail.setParamName("taxNo");
+                userVisitDetail.setParamValue(taxNo);
+                httpPost = new HttpPost("http://123.59.198.88:8090/index/tax_no");
                 params.add(new BasicNameValuePair("taxNo", taxNo));
             }
             UrlEncodedFormEntity entityParams = new UrlEncodedFormEntity(params, "utf-8");
@@ -768,15 +790,19 @@ public class PingAnApiController {
         }
         long start = System.currentTimeMillis();
         CloseableHttpClient httpClientOther = CreateHttpClient.getHttpClient();
-        HttpPost httpPostOther = new HttpPost("http://192.168.11.90:8090/getPingAnData/"+indexId);//192.168.10.104
+        HttpPost httpPostOther = new HttpPost("http://123.59.198.88:8090/getPingAnData/"+indexId);//192.168.10.111
         CloseableHttpResponse response = httpClientOther.execute(httpPostOther);
         HttpEntity entity = response.getEntity();//取出返回结果
         StatusLine statusLine = response.getStatusLine();
         int statusCode = statusLine.getStatusCode();//执行结果状态
         if (statusCode != 200) {
             httpClientOther.close();
+            userVisitDetail.setResultStatus(0);
+            userVisitDetailService.insertVisit(userVisitDetail);
             return ResultUtil.error(ResultEnum.NOT_FIND);
         }
+        userVisitDetail.setResultStatus(1);
+        userVisitDetailService.insertVisit(userVisitDetail);
         String resultStr = EntityUtils.toString(entity, "utf-8");//将结果转换为字符串
         JSONObject jsonObject = JSONObject.parseObject(resultStr);
         JSONObject data = (JSONObject) jsonObject.get("data");
@@ -797,6 +823,4 @@ public class PingAnApiController {
         return ResultUtil.success(data);
     }
 
-
-
-    }
+}

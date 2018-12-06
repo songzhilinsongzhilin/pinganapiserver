@@ -6,6 +6,7 @@ import java.util.Date;
 public class XhxUserVisitApi implements Serializable {
     private Long id;
     private String username;
+    private String uri;
     private String company;
     private String token;
     private int loginCount;
@@ -13,6 +14,14 @@ public class XhxUserVisitApi implements Serializable {
     private String loginIp;
     private Date createTime;
     private Date updateTime;
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
 
     public String getToken() {
         return token;
